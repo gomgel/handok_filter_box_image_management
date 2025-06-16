@@ -1,0 +1,88 @@
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/config_model.dart';
+
+enum LoadingType { none, loading, completed, error }
+
+final loadingProvider = StateProvider<LoadingType>((ref) => LoadingType.none);
+
+final rootNavigatorKey = Provider<GlobalKey<NavigatorState>>((ref) => GlobalKey());
+
+final activeTime = StateProvider<DateTime>((ref) => DateTime.now());
+
+final sharedPreferenceProvider = Provider((ref) => SharedPreferences.getInstance());
+
+final configProvider = StateNotifierProvider<ConfigNotifier, ConfigModel>((ref) {
+  return ConfigNotifier(ref);
+});
+
+class ConfigNotifier extends StateNotifier<ConfigModel> {
+  final StateNotifierProviderRef ref;
+  late SharedPreferences pref;
+
+  ConfigNotifier(this.ref)
+      : super(ConfigModel(
+    line: "B0001",
+    lineName: "선압2호기",
+    host: "http://10.129.132.119:3000/pda",//"10.152.26.89",
+    port: "3000",
+    updateHost: "10.129.132.119",
+    updatePort: "21",
+  )) {
+    refresh();
+  }
+
+  Future<int> refresh() async {
+    final pref = await ref.watch(sharedPreferenceProvider);
+
+    try {
+
+      final emptyDv = pref.getString("host") ?? "";
+      if ( ( emptyDv == "" ) ) {
+        await pref.setString("line", "B0001");
+        await pref.setString("lineName", "선압2호기");
+        await pref.setString("host", "http://10.129.132.119:3000/pda");
+        await pref.setString("port", "3000");
+        await pref.setString("updateHost", "10.129.132.119");
+        await pref.setString("updatePort", "21");
+      }
+
+      final line = pref.getString("line") ?? "B0001";
+      final lineName = pref.getString("lineName") ?? "선압2호기";
+      final host = pref.getString("host") ?? "http://10.129.132.119:3000/pda";
+      final port = pref.getString("port") ?? "3000";
+      final updateHost = pref.getString("updateHost") ?? "10.129.132.119";
+      final updatePort = pref.getString("updatePort") ?? "21";
+
+      state = ConfigModel(
+        line: line,
+        lineName: lineName,
+        host: host,
+        port: port,
+        updateHost: updateHost,
+        updatePort: updatePort,
+      );
+
+      return 0;
+    } catch (e) {
+      return -1;
+    }
+  }
+
+  saveConfig(ConfigModel model) async {
+    final pref = await ref.watch(sharedPreferenceProvider);
+    try {
+      await pref.setString("line", model.line);
+      await pref.setString("lineName", model.lineName);
+      await pref.setString("host", model.host);
+      await pref.setString("port", model.port);
+      await pref.setString("updateHost", model.updateHost);
+      await pref.setString("updatePort", model.updatePort);
+      state = model;
+    } catch (e) {}
+  }
+
+}
