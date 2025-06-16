@@ -1,4 +1,5 @@
 import 'package:filter_box_image_management/features/home/presentation/screens/home_screen.dart';
+import 'package:filter_box_image_management/features/image_capture/presentation/screens/main_screen.dart';
 import 'package:filter_box_image_management/features/setting/presentation/screens/setting_screen.dart';
 import 'package:filter_box_image_management/reference/screen/test_screen_01.dart';
 import 'package:filter_box_image_management/reference/screen/test_screen_02.dart';
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Modern Search App',
+        title: 'Handok Image Capture App',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           brightness: Brightness.dark,
@@ -39,12 +40,10 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/login',
         routes: {
-          '/login': (context) => const TestScreen02(),
+          '/login': (context) => const HomeScreen(),
           '/setting': (context) => const SettingScreen(),
-          // '/menu': (context) => MenuScreen(),
-          // '/export': (context) => ExportShippingScreen(),
-          // '/box': (context) => BoxShippingScreen(),
-          // '/validation': (context) => ShippingValidationScreen(),
+          '/main': (context) => const MainScreen(),
+
         }
         //home: const ModernSearchScreen(),
         );

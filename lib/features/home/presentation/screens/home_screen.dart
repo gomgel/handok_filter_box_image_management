@@ -1,19 +1,25 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:filter_box_image_management/core/providers/global_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../data/provider/home_provider.dart';
+import '../widgets/search_dropdown.dart'; // Import Riverpod
 
 // Providers to hold the active search queries
 final employeeNameSearchQueryProvider = StateProvider<String>((ref) => '');
 final productionLineSearchQueryProvider = StateProvider<String>((ref) => '');
 
-class HomeScreen extends ConsumerStatefulWidget { // Changed to ConsumerStatefulWidget
+class HomeScreen extends ConsumerStatefulWidget {
+  // Changed to ConsumerStatefulWidget
   const HomeScreen({super.key});
 
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState(); // Changed state class
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> { // Changed state class
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  // Changed state class
 
   final TextEditingController _employeeNameController = TextEditingController();
   final TextEditingController _productionLineController = TextEditingController();
@@ -58,7 +64,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> { // Changed state clas
 
   @override
   Widget build(BuildContext context) {
-
     final config = ref.watch(configProvider);
     debugPrint(config.host);
 
@@ -70,43 +75,70 @@ class _HomeScreenState extends ConsumerState<HomeScreen> { // Changed state clas
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              _buildModernTextFormField(
-                controller: _employeeNameController,
-                labelText: 'Employee Name',
-                hintText: '',
-                prefixIcon: Icons.person_outline,
-                onFieldSubmitted: (_) => _search(),
-              ),
-              const SizedBox(height: 20.0),
-              _buildModernTextFormField(
-                controller: _productionLineController,
-                labelText: 'Production Line',
-                hintText: '',
-                prefixIcon: Icons.factory_outlined,
-                onFieldSubmitted: (_) => _search(),
-              ),
-              const SizedBox(height: 30.0),
+              SearchDropDown(
+                label: "사원정보",
+                items: (String filter, LoadProps? loadProps) async {
+                  //debugPrint("filter : $filter,  str : $s");
 
+                  String name = filter;
+
+
+                  final list = await ref.read(employeeProvider.notifier).getForSearching(
+                        name_1st: name.length > 0 ? name[0] : "",
+                        name_2nd: name.length > 1 ? name[1] : "",
+                        name_3rd: name.length > 2 ? name[2] : "",
+                      );
+
+                  return list;
+                },
+                onSelectedItem: (model) {
+                  debugPrint("Selected Changed : ${model.toString()}");
+                  ref.read(loginUserProvider.notifier).state = model;
+                },
+              ),
+              const SizedBox(height: 16.0),
+              SearchDropDown(
+                label: "부서정보",
+                items: (String filter, LoadProps? loadProps) async {
+                  //debugPrint("filter : $filter,  str : $s");
+
+                  String name = filter;
+
+                  final list = await ref.read(lineProvider.notifier).getForSearching(
+                    name_1st: name.length > 0 ? name[0] : "",
+                    name_2nd: name.length > 1 ? name[1] : "",
+                    name_3rd: name.length > 2 ? name[2] : "",
+                  );
+
+                  return list;
+                },
+                onSelectedItem: (model) {
+                  debugPrint("Selected Changed : ${model.toString()}");
+                  ref.read(loginLineProvider.notifier).state = model;
+                },
+              ),
+              const SizedBox(height: 32.0),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: _search,
+                  onPressed: () {
+                    Navigator.of(context).pushNamed("/main");
+                  },
                   label: const Text(
                     'ENTER',
                     style: TextStyle(fontSize: 16.0, color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal.shade700,
+                    // backgroundColor: Colors.teal.shade700,
                     padding: const EdgeInsets.symmetric(vertical: 18.0),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
                     elevation: 8,
-                    shadowColor: Colors.teal.shade900,
+                    // shadowColor: Colors.teal.shade900,
                   ),
                 ),
               ),
-
               const SizedBox(height: 15),
               TextButton(
                 onPressed: () {
@@ -142,7 +174,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> { // Changed state clas
         hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
         labelStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
         // prefixIcon: Icon(prefixIcon, color: Colors.white.withOpacity(0.8)), // Using prefixIcon
-        suffixIcon: IconButton(onPressed: (){}, icon: Icon(Icons.search)), // The new suffixIcon
+        suffixIcon: IconButton(onPressed: () {}, icon: Icon(Icons.search)), // The new suffixIcon
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
           borderSide: BorderSide(color: Colors.grey.shade800, width: 1.5),

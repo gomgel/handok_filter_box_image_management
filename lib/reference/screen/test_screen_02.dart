@@ -1,11 +1,12 @@
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:filter_box_image_management/core/models/user_model.dart';
+import 'package:filter_box_image_management/core/models/employee_model.dart';
 import 'package:filter_box_image_management/features/home/data/provider/home_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/models/common_if_model.dart';
 import '../../core/providers/common_provider.dart';
+import '../../features/home/presentation/widgets/search_dropdown.dart';
 
 class TestScreen02 extends ConsumerStatefulWidget {
   const TestScreen02({super.key});
@@ -84,99 +85,99 @@ class _TestScreen02State extends ConsumerState<TestScreen02> {
   }
 }
 
-class SearchDropDown extends StatefulWidget {
-
-  final DropdownSearchOnFind<EmployeeModel>? items;
-  final Function(EmployeeModel) onSelectedItem;
-
-  const SearchDropDown({super.key, required this.items, required this.onSelectedItem});
-
-  @override
-  State<SearchDropDown> createState() => _SearchEmployeeState();
-}
-
-class _SearchEmployeeState extends State<SearchDropDown> {
-
-  EmployeeModel _selectedItem = EmployeeModel.withEmpty();
-
-  EmployeeModel get selectedItem => _selectedItem;
-  set selectedItem(EmployeeModel emp){
-    _selectedItem = emp;
-    widget.onSelectedItem(emp);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: DropdownSearch<EmployeeModel>(
-        selectedItem: _selectedItem,
-        decoratorProps: DropDownDecoratorProps(
-          decoration: InputDecoration(
-              contentPadding: EdgeInsets.fromLTRB(12, 12, 0, 0),
-              border: OutlineInputBorder(),
-              prefixIcon: _selectedItem.isEmpty()
-                  ? null
-                  : GestureDetector(
-                      child: Icon(Icons.cancel),
-                      onTap: () {
-                        setState(() {
-                          selectedItem = EmployeeModel.withEmpty();
-                        });
-                      },
-                    )),
-        ),
-        itemAsString: (model) => model.emp_nm,
-        items: widget.items,
-        // items: (filter, s) async {
-        //   debugPrint("filter : $filter,  str : $s");
-        //
-        //   String name = filter.isEmpty ? "ㄱㅈ" : filter;
-        //
-        //   final list = await ref.read(employeeProvider.notifier).getForSearching(
-        //         name_1st: name.length > 0 ? name[0] : "",
-        //         name_2nd: name.length > 1 ? name[1] : "",
-        //         name_3rd: name.length > 2 ? name[2] : "",
-        //       );
-        //
-        //   return list;
-        // },
-        onChanged: (model) {
-          setState(() {
-            selectedItem = model ?? EmployeeModel.withEmpty();
-          });
-        },
-        filterFn: (model, str) => true,
-        compareFn: (i, s) => i.isEqual(s),
-        popupProps: PopupProps<EmployeeModel>.bottomSheet(
-          title: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0.0),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text("CLOSE")),
-          ),
-          searchFieldProps: const TextFieldProps(style: TextStyle(color: Colors.black87)),
-          searchDelay: const Duration(microseconds: 1500),
-          bottomSheetProps:
-              BottomSheetProps(backgroundColor: Colors.blueGrey[50], shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0))),
-          showSearchBox: true,
-          itemBuilder: (context, item, isDisabled, isSelected) {
-            return ListTile(
-              title: Text(
-                item.emp_nm,
-                style: const TextStyle(color: Colors.black87),
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
+// class SearchDropDown extends StatefulWidget {
+//
+//   final DropdownSearchOnFind<EmployeeModel>? items;
+//   final Function(EmployeeModel) onSelectedItem;
+//
+//   const SearchDropDown({super.key, required this.items, required this.onSelectedItem});
+//
+//   @override
+//   State<SearchDropDown> createState() => _SearchEmployeeState();
+// }
+//
+// class _SearchEmployeeState extends State<SearchDropDown> {
+//
+//   EmployeeModel _selectedItem = EmployeeModel.withEmpty();
+//
+//   EmployeeModel get selectedItem => _selectedItem;
+//   set selectedItem(EmployeeModel emp){
+//     _selectedItem = emp;
+//     widget.onSelectedItem(emp);
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.all(16.0),
+//       child: DropdownSearch<EmployeeModel>(
+//         selectedItem: _selectedItem,
+//         decoratorProps: DropDownDecoratorProps(
+//           decoration: InputDecoration(
+//               contentPadding: EdgeInsets.fromLTRB(12, 12, 0, 0),
+//               border: OutlineInputBorder(),
+//               prefixIcon: _selectedItem.isEmpty()
+//                   ? null
+//                   : GestureDetector(
+//                       child: Icon(Icons.cancel),
+//                       onTap: () {
+//                         setState(() {
+//                           selectedItem = EmployeeModel.withEmpty();
+//                         });
+//                       },
+//                     )),
+//         ),
+//         itemAsString: (model) => model.emp_nm,
+//         items: widget.items,
+//         // items: (filter, s) async {
+//         //   debugPrint("filter : $filter,  str : $s");
+//         //
+//         //   String name = filter.isEmpty ? "ㄱㅈ" : filter;
+//         //
+//         //   final list = await ref.read(employeeProvider.notifier).getForSearching(
+//         //         name_1st: name.length > 0 ? name[0] : "",
+//         //         name_2nd: name.length > 1 ? name[1] : "",
+//         //         name_3rd: name.length > 2 ? name[2] : "",
+//         //       );
+//         //
+//         //   return list;
+//         // },
+//         onChanged: (model) {
+//           setState(() {
+//             selectedItem = model ?? EmployeeModel.withEmpty();
+//           });
+//         },
+//         filterFn: (model, str) => true,
+//         compareFn: (i, s) => i.isEqual(s),
+//         popupProps: PopupProps<EmployeeModel>.bottomSheet(
+//           title: Padding(
+//             padding: const EdgeInsets.symmetric(horizontal: 8.0),
+//             child: ElevatedButton(
+//                 style: ElevatedButton.styleFrom(
+//                   shape: RoundedRectangleBorder(
+//                     borderRadius: BorderRadius.circular(0.0),
+//                   ),
+//                 ),
+//                 onPressed: () {
+//                   Navigator.pop(context);
+//                 },
+//                 child: Text("CLOSE")),
+//           ),
+//           searchFieldProps: const TextFieldProps(style: TextStyle(color: Colors.black87)),
+//           searchDelay: const Duration(microseconds: 1500),
+//           bottomSheetProps:
+//               BottomSheetProps(backgroundColor: Colors.blueGrey[50], shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0))),
+//           showSearchBox: true,
+//           itemBuilder: (context, item, isDisabled, isSelected) {
+//             return ListTile(
+//               title: Text(
+//                 item.emp_nm,
+//                 style: const TextStyle(color: Colors.black87),
+//               ),
+//             );
+//           },
+//         ),
+//       ),
+//     );
+//   }
+// }

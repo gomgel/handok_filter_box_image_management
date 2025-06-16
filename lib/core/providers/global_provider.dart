@@ -1,4 +1,5 @@
 
+import 'package:filter_box_image_management/core/models/search_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +15,10 @@ final rootNavigatorKey = Provider<GlobalKey<NavigatorState>>((ref) => GlobalKey(
 final activeTime = StateProvider<DateTime>((ref) => DateTime.now());
 
 final sharedPreferenceProvider = Provider((ref) => SharedPreferences.getInstance());
+
+final loginUserProvider = StateProvider<SearchModel>((ref) => SearchModel.withEmpty());
+final loginLineProvider = StateProvider<SearchModel>((ref) => SearchModel.withEmpty());
+
 
 final configProvider = StateNotifierProvider<ConfigNotifier, ConfigModel>((ref) {
   return ConfigNotifier(ref);
