@@ -37,7 +37,7 @@ class BaseScreen extends ConsumerWidget {
                   ),
                   const SizedBox(width: 32.0),
                   Text(
-                    " ${user.name}/ ${line.name}",
+                    " ${user.name}  ${line.name}",
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.primary,
                       fontSize: 14.0,
