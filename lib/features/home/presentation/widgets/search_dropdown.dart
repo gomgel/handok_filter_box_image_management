@@ -34,13 +34,13 @@ class _SearchEmployeeState extends State<SearchDropDown> {
       selectedItem: _selectedItem,
       decoratorProps: DropDownDecoratorProps(
         decoration: InputDecoration(
-          label: Text(
-            widget.label,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16.0,
-            ),
-          ),
+          // label: Text(
+          //   widget.label,
+          //   style: TextStyle(
+          //     fontWeight: FontWeight.bold,
+          //     fontSize: 16.0,
+          //   ),
+          // ),
           contentPadding: const EdgeInsets.fromLTRB(12, 12, 0, 0),
           border: const OutlineInputBorder(),
           prefixIcon: _selectedItem.isEmpty()

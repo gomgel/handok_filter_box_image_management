@@ -55,20 +55,20 @@ class EmployeeNotifier extends StateNotifier<CommonIfModelBase> {
 
     try {
 
-      // final item = await repository.getEmp(
-      //   name_1st: name_1st,
-      //   name_2nd: name_2nd,
-      //   name_3rd: name_3rd,
-      // );
-      //
-      // return item.toSearchItems();
-      return [
-        SearchModel(code: '12345', name: "박진덕"),
-        SearchModel(code: '22222', name: "홍길동"),
-        SearchModel(code: '33333', name: "김철수"),
-        SearchModel(code: '44444', name: "김냄비"),
-        SearchModel(code: '55555', name: "노트북"),
-      ];
+      final item = await repository.getEmp(
+        name_1st: name_1st,
+        name_2nd: name_2nd,
+        name_3rd: name_3rd,
+      );
+
+      return item.toSearchItems();
+      // return [
+      //   SearchModel(code: '12345', name: "박진덕"),
+      //   SearchModel(code: '22222', name: "홍길동"),
+      //   SearchModel(code: '33333', name: "김철수"),
+      //   SearchModel(code: '44444', name: "김냄비"),
+      //   SearchModel(code: '55555', name: "노트북"),
+      // ];
 
       //state = CommonIFModel<EmployeeInfo, Null>(item: item);
 
@@ -124,20 +124,20 @@ class LineNotifier extends StateNotifier<CommonIfModelBase> {
 
     try {
 
-      // final item = await repository.getLine(
-      //   name_1st: name_1st,
-      //   name_2nd: name_2nd,
-      //   name_3rd: name_3rd,
-      // );
-      //
-      // return item.toSearchItems();
-      return [
-        SearchModel(code: '12345', name: "1라인"),
-        SearchModel(code: '22222', name: "2라인"),
-        SearchModel(code: '33333', name: "3라인"),
-        SearchModel(code: '44444', name: "4라인"),
-        SearchModel(code: '55555', name: "5라인"),
-      ];
+      final item = await repository.getLine(
+        name_1st: name_1st,
+        name_2nd: name_2nd,
+        name_3rd: name_3rd,
+      );
+
+      return item.toSearchItems();
+      // return [
+      //   SearchModel(code: '12345', name: "1라인"),
+      //   SearchModel(code: '22222', name: "2라인"),
+      //   SearchModel(code: '33333', name: "3라인"),
+      //   SearchModel(code: '44444', name: "4라인"),
+      //   SearchModel(code: '55555', name: "5라인"),
+      // ];
 
     } catch (e) {
       //state = CommonIfModelError(message: e.toString());

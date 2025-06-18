@@ -92,8 +92,9 @@ class _UploadCameraPhotoScreenState extends ConsumerState<UploadCameraPhotoScree
     try {
       final url = Uri.parse('${ref.read(configProvider).host}/upload');
       final request = http.MultipartRequest('POST', url);
-      request.fields["emp_code"]  = ref.read(loginUserProvider).code.isEmpty ? "99999999" : ref.read(loginUserProvider).code;
-      request.fields["emp_name"]  = ref.read(loginUserProvider).name.isEmpty ? "NULL" : ref.read(loginUserProvider).name;
+      request.fields["emp_0001"]  = ref.read(loginUserProvider).isNotEmpty ? ref.read(loginUserProvider)[0].code : "99999999";
+      request.fields["emp_0002"]  = ref.read(loginUserProvider).length > 1 ? ref.read(loginUserProvider)[1].code : "99999999";
+      request.fields["emp_0003"]  = ref.read(loginUserProvider).length > 2 ? ref.read(loginUserProvider)[2].code : "99999999" ;
       request.fields["line_code"] = ref.read(loginLineProvider).code.isEmpty ? "9999" : ref.read(loginLineProvider).code;
       request.fields["line_name"] = ref.read(loginLineProvider).name.isEmpty ? "NULL" : ref.read(loginLineProvider).name;
       request.files.add(

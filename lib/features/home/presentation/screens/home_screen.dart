@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/provider/home_provider.dart';
-import '../widgets/search_dropdown.dart'; // Import Riverpod
+import '../widgets/search_dropdown.dart';
+import '../widgets/search_multi_dropdown.dart'; // Import Riverpod
 
 // Providers to hold the active search queries
 final employeeNameSearchQueryProvider = StateProvider<String>((ref) => '');
@@ -75,13 +76,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              SearchDropDown(
-                label: "사원정보",
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "사원정보",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12.0,
+                  ),
+                ),
+              ),
+              SizedBox(height: 4.0),
+              SearchMultiDropDown(
                 items: (String filter, LoadProps? loadProps) async {
-                  //debugPrint("filter : $filter,  str : $s");
 
                   String name = filter;
 
+                  if (name.isEmpty) {
+                    return [];
+                  }
 
                   final list = await ref.read(employeeProvider.notifier).getForSearching(
                         name_1st: name.length > 0 ? name[0] : "",
@@ -91,24 +104,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                   return list;
                 },
-                onSelectedItem: (model) {
-                  debugPrint("Selected Changed : ${model.toString()}");
-                  ref.read(loginUserProvider.notifier).state = model;
+                onSelectedItem: (models) {
+                  debugPrint("Selected Changed : ${models.toString()}");
+                  ref.read(loginUserProvider.notifier).state = models;
                 },
               ),
               const SizedBox(height: 16.0),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "부서정보",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12.0,
+                  ),
+                ),
+              ),
+              SizedBox(height: 4.0),
               SearchDropDown(
-                label: "부서정보",
                 items: (String filter, LoadProps? loadProps) async {
                   //debugPrint("filter : $filter,  str : $s");
 
                   String name = filter;
 
                   final list = await ref.read(lineProvider.notifier).getForSearching(
-                    name_1st: name.length > 0 ? name[0] : "",
-                    name_2nd: name.length > 1 ? name[1] : "",
-                    name_3rd: name.length > 2 ? name[2] : "",
-                  );
+                        name_1st: name.length > 0 ? name[0] : "",
+                        name_2nd: name.length > 1 ? name[1] : "",
+                        name_3rd: name.length > 2 ? name[2] : "",
+                      );
 
                   return list;
                 },
@@ -130,6 +153,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   style: ElevatedButton.styleFrom(
                     // backgroundColor: Colors.teal.shade700,
+                    backgroundColor: Colors.blue,
                     padding: const EdgeInsets.symmetric(vertical: 18.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),

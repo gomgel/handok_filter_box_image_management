@@ -17,6 +17,12 @@ class BaseScreen extends ConsumerWidget {
     final user = ref.watch(loginUserProvider);
     final line = ref.watch(loginLineProvider);
 
+    var names = "";
+
+    for(var item in user) {
+      names = "$names ${item.name}";
+    }
+
     return Scaffold(
       floatingActionButton: floatingActionButton,
       appBar: PreferredSize(
@@ -36,14 +42,27 @@ class BaseScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: 32.0),
-                  Text(
-                    " ${user.name}  ${line.name}",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  Column(
+                    children: [
+                      Text(
+                        "${line.name}",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        "${names}",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  )
+
                 ],
               ),
               Text(

@@ -15,5 +15,8 @@ class SearchModel {
     return code.isEmpty;
   }
 
-
+  @override
+  String toString() {
+    return "code : $code, name : $name";
+  }
 }
