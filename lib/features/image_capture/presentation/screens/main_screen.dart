@@ -394,7 +394,7 @@ class _UploadCameraPhotoScreenState extends ConsumerState<UploadCameraPhotoScree
     setState(() {
       _isUploading = true;
       _uploadProgress = 0.0;
-      _uploadStatus = "Uploading photo (0%)...";
+      _uploadStatus = "Uploading photo (0%)..";
     });
 
     try {
