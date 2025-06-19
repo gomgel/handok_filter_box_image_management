@@ -35,10 +35,19 @@ class _SearchMultiDropDownState extends State<SearchMultiDropDown> {
   Widget build(BuildContext context) {
     return DropdownSearch<SearchModel>.multiSelection(
       selectedItems: _selectedItems,
-      decoratorProps: const DropDownDecoratorProps(
+      decoratorProps: DropDownDecoratorProps(
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(12, 12, 0, 0),
-          border: OutlineInputBorder(),
+          label: Text(
+            widget.label,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16.0,
+            ),
+          ),
+          floatingLabelAlignment: FloatingLabelAlignment.start,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          contentPadding: const EdgeInsets.fromLTRB(12, 12, 0, 0),
+          border: const OutlineInputBorder(),
         ),
       ),
       itemAsString: (model) => model.name,
@@ -62,10 +71,11 @@ class _SearchMultiDropDownState extends State<SearchMultiDropDown> {
                 models.removeWhere((item) => item.code == model.code);
                 selectedItems = models;
                 Navigator.of(context).pop();
-              }
-              if (models.length == widget.maxSelectableCount) {
-                selectedItems = models;
-                Navigator.of(context).pop();
+              } else {
+                if (models.length == widget.maxSelectableCount) {
+                  selectedItems = models;
+                  Navigator.of(context).pop();
+                }
               }
             },
           );

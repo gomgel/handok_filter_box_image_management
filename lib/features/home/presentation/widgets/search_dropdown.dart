@@ -34,13 +34,13 @@ class _SearchEmployeeState extends State<SearchDropDown> {
       selectedItem: _selectedItem,
       decoratorProps: DropDownDecoratorProps(
         decoration: InputDecoration(
-          // label: Text(
-          //   widget.label,
-          //   style: TextStyle(
-          //     fontWeight: FontWeight.bold,
-          //     fontSize: 16.0,
-          //   ),
-          // ),
+          label: Text(
+            widget.label,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16.0,
+            ),
+          ),
           contentPadding: const EdgeInsets.fromLTRB(12, 12, 0, 0),
           border: const OutlineInputBorder(),
           prefixIcon: _selectedItem.isEmpty()
@@ -81,7 +81,7 @@ class _SearchEmployeeState extends State<SearchDropDown> {
               child: Text("CLOSE")),
         ),
         searchFieldProps: const TextFieldProps(style: TextStyle(color: Colors.black87)),
-        searchDelay: const Duration(microseconds: 1500),
+        searchDelay: const Duration(seconds: 10),
         bottomSheetProps:
             BottomSheetProps(backgroundColor: Colors.blueGrey[50], shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0))),
         showSearchBox: true,

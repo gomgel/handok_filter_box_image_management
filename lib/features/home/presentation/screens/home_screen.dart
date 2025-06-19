@@ -76,18 +76,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "사원정보",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.0,
-                  ),
-                ),
-              ),
               SizedBox(height: 4.0),
               SearchMultiDropDown(
+                label: "사원정보",
                 items: (String filter, LoadProps? loadProps) async {
 
                   String name = filter;
@@ -110,18 +101,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 },
               ),
               const SizedBox(height: 16.0),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "부서정보",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.0,
-                  ),
-                ),
-              ),
               SizedBox(height: 4.0),
               SearchDropDown(
+                label: "부서정보",
                 items: (String filter, LoadProps? loadProps) async {
                   //debugPrint("filter : $filter,  str : $s");
 
