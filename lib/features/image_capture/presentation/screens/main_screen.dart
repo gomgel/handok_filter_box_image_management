@@ -301,6 +301,7 @@ class _UploadCameraPhotoScreenState extends ConsumerState<UploadCameraPhotoScree
         imageQuality: 80,
       );
 
+      //test
       if (pickedFile != null) {
         final bytes = await pickedFile.readAsBytes(); // Original bytes from picker
         final ui.Image originalImage = await decodeImageFromList(bytes);
