@@ -6,11 +6,29 @@ var o2x = require('object-to-xml');
 var multer = require('multer');
 var path = require('path');
 
+function dateFormat(date) {
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
+  let hour = date.getHours();
+  let minute = date.getMinutes();
+  let second = date.getSeconds();
+
+  month = month >= 10 ? month : '0' + month;
+  day = day >= 10 ? day : '0' + day;
+  hour = hour >= 10 ? hour : '0' + hour;
+  minute = minute >= 10 ? minute : '0' + minute;
+  second = second >= 10 ? second : '0' + second;
+
+  return date.getFullYear() + month + day + hour + minute + second;
+}
 
 router.get('/', function(req, res, next) {
   res.send('this page is about a pda');
 });
 
+
+
+console.log(dateFormat(new Date()).substring(0, 8) );
 /* get employees */
 //http://localhost:3000/pda/emp?name_1st=ㄱ&name_2nd=ㅎ&name_3rd=ㅅ
 router.get('/emp', async function(req, res, next) {
@@ -169,7 +187,7 @@ const storage = multer.diskStorage({
 	},
 	filename: (req, file, cb) => {
     //(new Date()).toISOString().replace(/[^0-9]/g, '').slice(0, -9)
-	  const uniqueSuffix = (new Date()).toISOString().replace(/[^0-9]/g, '').slice(0, -3) + '-' + Math.round(Math.random() * 1E8) + '-' + req.body.line_name;
+	  const uniqueSuffix = dateFormat(new Date()) + '-' + Math.round(Math.random() * 1E8) + '-' + req.body.line_name;
 	  const fileExtension = path.extname(file.originalname);
 	  cb(null, 'image-' + uniqueSuffix + fileExtension);
 	},
@@ -195,10 +213,10 @@ const upload = multer({ storage: storage });
   const request = await connection.request()
   .input('p_action', dirver.NVarChar(50), 'insert')
   .input('p_image_uuid', dirver.NVarChar(30), req.file.filename.substring(6, 29))
-  .input('p_image_date', dirver.NVarChar(8), (new Date()).toISOString().replace(/[^0-9]/g, '').slice(0, -9))
+  .input('p_image_date', dirver.NVarChar(8), dateFormat(new Date()).substring(0,8) )
   .input('p_line_no', dirver.NVarChar(10), req.body.line_code)
   .input('p_file_name', dirver.NVarChar(50), req.file.filename)
-  .input('p_file_path', dirver.NVarChar(200), __dirname + 'images/' + req.file.filename)
+  .input('p_file_path', dirver.NVarChar(200), path.join(__dirname, '..', '\\images\\') + req.file.filename)
   .input('p_emp1', dirver.NVarChar(20), req.body.emp_0001)
   .input('p_emp2', dirver.NVarChar(20), req.body.emp_0002)
   .input('p_emp3', dirver.NVarChar(20), req.body.emp_0003)

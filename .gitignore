@@ -114,7 +114,6 @@ Temporary Items
 *.class
 
 # Generated files
-bin/
 gen/
 out/
 

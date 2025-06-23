@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/images', express.static('images'));
 app.use('/setup', express.static('setup'));
 
-// console.log(__dirname + 'images/')
+// console.log(__dirname + '\\images')
 
 
 // ( async function() {
