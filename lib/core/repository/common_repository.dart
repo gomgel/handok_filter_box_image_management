@@ -1,5 +1,6 @@
 
 import 'package:dio/dio.dart' hide Headers;
+import 'package:filter_box_image_management/core/models/version_model.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../models/employee_model.dart';
@@ -27,5 +28,8 @@ abstract class CommonRepository {
     @Query('name_2nd') required String name_2nd,
     @Query('name_3rd') required String name_3rd,
   });
+
+  @GET('/version')
+  Future<VersionInfo> getVersion();
 
 }

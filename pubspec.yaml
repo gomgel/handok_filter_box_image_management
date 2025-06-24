@@ -55,6 +55,9 @@ dependencies:
   image_picker: ^1.1.2
   path_provider: ^2.1.5
   flutter_launcher_icons: ^0.14.4
+  url_launcher: ^6.3.1
+
+
 
 
 dev_dependencies:
@@ -75,6 +78,8 @@ dev_dependencies:
   riverpod_lint: ^3.0.0-dev.4
 
   retrofit_generator: ^9.0.0
+
+
 
 flutter_launcher_icons:
   android: "launcher_icon"

@@ -150,34 +150,34 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
             ],
           ),
         ),
-        Container(
-          height: 60,
-          padding: EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () async {
-                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                  doSocketTest(
-                    context: context,
-                    host: prefs.get("host").toString(),
-                    port: int.parse(prefs.get("port").toString()),
-                  );
-                },
-                child: Text('운영테스트'),
-              ),
-              ElevatedButton(onPressed: () async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                doSocketTest(
-                  context: context,
-                  host: prefs.get("updateHost").toString(),
-                  port: int.parse(prefs.get("updatePort").toString()),
-                );
-              }, child: Text('업데이트테스트')),
-            ],
-          ),
-        )
+        // Container(
+        //   height: 60,
+        //   padding: EdgeInsets.all(8.0),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //     children: [
+        //       ElevatedButton(
+        //         onPressed: () async {
+        //           SharedPreferences prefs = await SharedPreferences.getInstance();
+        //           doSocketTest(
+        //             context: context,
+        //             host: prefs.get("host").toString(),
+        //             port: int.parse(prefs.get("port").toString()),
+        //           );
+        //         },
+        //         child: Text('운영테스트'),
+        //       ),
+        //       ElevatedButton(onPressed: () async {
+        //         SharedPreferences prefs = await SharedPreferences.getInstance();
+        //         doSocketTest(
+        //           context: context,
+        //           host: prefs.get("updateHost").toString(),
+        //           port: int.parse(prefs.get("updatePort").toString()),
+        //         );
+        //       }, child: Text('업데이트테스트')),
+        //     ],
+        //   ),
+        // )
       ],
     );
   }

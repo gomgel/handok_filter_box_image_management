@@ -1,7 +1,11 @@
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:filter_box_image_management/core/providers/common_provider.dart';
 import 'package:filter_box_image_management/core/providers/global_provider.dart';
+import 'package:filter_box_image_management/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/provider/home_provider.dart';
 import '../widgets/search_dropdown.dart';
@@ -101,7 +105,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 },
               ),
               const SizedBox(height: 16.0),
-              SizedBox(height: 4.0),
+              const SizedBox(height: 4.0),
               SearchDropDown(
                 label: "부서정보",
                 items: (String filter, LoadProps? loadProps) async {
@@ -126,7 +130,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: () {
+                  onPressed: () async {
+
+
+                    final result = await isTheLastVersion();
+
+                    if (!result) {
+
+                      final Uri url = Uri.parse("${ref.read(configProvider).updateHost}/setup/app.apk");
+
+                      await CommonUtils.instance.showSimpleDialog_01(context, "HANDOK PDA", "신규버전이 나왔습니다..\n업데이트를 진행합니다.");
+                      launchUrl(url);
+                      return;
+                    }
+
+                    if (ref.read(loginLineProvider).isEmpty()) {
+
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(CommonUtils.instance.alertSnackBar(context: context, type: SnackBarType.error, message: "부서정보는 필수값!"));
+
+                      return;
+                    }
+
                     Navigator.of(context).pushNamed("/main");
                   },
                   label: const Text(
@@ -162,6 +187,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ),
     );
+  }
+
+  Future<bool> isTheLastVersion() async {
+    final version = await ref.watch(commonRepositoryProvider).getVersion();
+
+    try {
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      debugPrint("device : ${packageInfo.version}  - ${packageInfo.buildNumber} ");
+
+      final version = await ref.read(commonRepositoryProvider).getVersion();
+
+      debugPrint("version : ${version.return_data.version} - ${version.return_data.number} ");
+
+      if (packageInfo.buildNumber == version.return_data.number) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+
   }
 
   Widget _buildModernTextFormField({
