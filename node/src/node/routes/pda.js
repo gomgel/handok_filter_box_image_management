@@ -5,6 +5,7 @@ var dirver = require("mssql/msnodesqlv8");
 var o2x = require('object-to-xml');
 var multer = require('multer');
 var path = require('path');
+var env = require('../common/setting');
 
 function dateFormat(date) {
   let month = date.getMonth() + 1;
@@ -28,7 +29,9 @@ router.get('/', function(req, res, next) {
 
 
 
-console.log(dateFormat(new Date()).substring(0, 8) );
+console.log( env.version + ' - ' + dateFormat(new Date()).substring(0, 8) );
+
+
 /* get employees */
 //http://localhost:3000/pda/emp?name_1st=ㄱ&name_2nd=ㅎ&name_3rd=ㅅ
 router.get('/emp', async function(req, res, next) {
@@ -51,7 +54,7 @@ router.get('/emp', async function(req, res, next) {
         console.log('error found : '  + err);
 
         let returnData = { 
-          return_code : -1, 
+          return_code : '-1', 
           return_msg : err.originalError.info.message, 
           return_data : []}      
         
@@ -104,7 +107,7 @@ router.get('/line', async function(req, res, next) {
         console.log('error found : '  + err);
 
         let returnData = { 
-          return_code : -1, 
+          return_code : '-1', 
           return_msg : err.originalError.info.message, 
           return_data : []}      
         
@@ -133,6 +136,21 @@ router.get('/line', async function(req, res, next) {
     }
   } );  
 
+});
+
+/* get version */
+//http://localhost:3000/pda/version
+router.get('/version', async function(req, res, next) {
+  let returnData = { 
+    return_code : '1', 
+    return_msg : 'success',         
+    return_data : { 'version' : env.version, 'number' : env.number} }
+
+  //console.log(result.recordset);
+
+  res.writeHead('200', {'Content-Type': 'application/json; charset=utf8'});
+  res.write(JSON.stringify(returnData));  
+  res.end();	 
 });
 
 async function saveScreenshotInfo (
