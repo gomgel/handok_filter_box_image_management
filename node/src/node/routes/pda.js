@@ -191,6 +191,28 @@ async function saveScreenshotInfo (
   } );  
 }
 
+async function getServerTime () {
+  var connection = await pool;
+
+  const request = await connection.request()
+  .input('p_action', dirver.NVarChar(50), 'time')
+  .output('p_result_value', dirver.NVarChar(5))
+  .output('p_result_code', dirver.NVarChar(5))
+  .output('p_result_msg', dirver.NVarChar(100))
+  .execute('pda_set_now', (err, result) => {
+
+    console.log(result.output.p_result_value);
+    console.log(result.output.p_result_msg);
+
+    if (err) {
+      console.log('getServerTime: '  + err);
+      return 0;                 
+    } else {      
+      return 1;
+    }
+  } );  
+}
+
 // Configure multer for file storage
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {

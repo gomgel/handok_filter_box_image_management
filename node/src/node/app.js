@@ -6,6 +6,8 @@ var logger = require('morgan');
 
 var dirver = require("mssql/msnodesqlv8");
 
+var pool = require('./common/connectionpool');
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var popRouter = require('./routes/pop');
@@ -28,6 +30,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/images', express.static('images'));
 app.use('/setup', express.static('setup'));
+
+var lastExectime = new Date();
 
 // console.log(__dirname + '\\images')
 
@@ -71,6 +75,35 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/pop', popRouter);
 app.use('/pda', pdaRouter);
+
+const intervalObj = setInterval(async () => {
+  console.log('intervaiewing the interval : ' + lastExectime);
+
+
+
+  if ( ( Math.floor(( (new Date) - lastExectime)/1000/60) ) < 1 ) {     
+  } else {
+    var connection = await pool;
+
+    const request = await connection.request()
+    .input('p_action', dirver.NVarChar(50), 'time')
+    .output('p_result_value', dirver.NVarChar(14))
+    .output('p_result_code', dirver.NVarChar(5))
+    .output('p_result_msg', dirver.NVarChar(100))
+    .execute('pda_get_now', (err, result) => {
+  
+      console.log(result.output.p_result_value);
+      
+      if (err) {
+        console.log('getServerTime: '  + err);
+        return 0;                 
+      } else {      
+        return 1;
+      }
+    } );  
+  }
+
+}, 10000);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
