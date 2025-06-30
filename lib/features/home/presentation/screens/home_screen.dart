@@ -140,7 +140,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       final Uri url = Uri.parse("${ref.read(configProvider).updateHost}/setup/app.apk");
 
                       await CommonUtils.instance.showSimpleDialog_01(context, "HANDOK PDA", "신규버전이 나왔습니다..\n업데이트를 진행합니다.");
-                      launchUrl(url);
+                      await launchUrl(url);
                       return;
                     }
 

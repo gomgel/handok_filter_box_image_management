@@ -34,8 +34,8 @@ class ConfigNotifier extends StateNotifier<ConfigModel> {
     lineName: "선압2호기",
     host: "http://10.129.132.119:3000/pda",//"10.152.26.89",
     port: "3000",
-    updateHost: "10.129.132.119",
-    updatePort: "21",
+    updateHost: "http://10.129.132.119:3000",
+    updatePort: "3000",
   )) {
     refresh();
   }
@@ -51,16 +51,16 @@ class ConfigNotifier extends StateNotifier<ConfigModel> {
         await pref.setString("lineName", "선압2호기");
         await pref.setString("host", "http://10.129.132.119:3000/pda");
         await pref.setString("port", "3000");
-        await pref.setString("updateHost", "10.129.132.119");
-        await pref.setString("updatePort", "21");
+        await pref.setString("updateHost", "http://10.129.132.119:3000");
+        await pref.setString("updatePort", "3000");
       }
 
       final line = pref.getString("line") ?? "B0001";
       final lineName = pref.getString("lineName") ?? "선압2호기";
       final host = pref.getString("host") ?? "http://10.129.132.119:3000/pda";
       final port = pref.getString("port") ?? "3000";
-      final updateHost = pref.getString("updateHost") ?? "10.129.132.119";
-      final updatePort = pref.getString("updatePort") ?? "21";
+      final updateHost = pref.getString("updateHost") ?? "http://10.129.132.119:3000";
+      final updatePort = pref.getString("updatePort") ?? "3000";
 
       state = ConfigModel(
         line: line,
