@@ -5,7 +5,8 @@ uses
   uMain in 'uMain.pas' {frmMain},
   uConfig in 'uConfig.pas',
   uDM in 'uDM.pas' {dmMain: TDataModule},
-  uConst in 'uConst.pas';
+  uConst in 'uConst.pas',
+  uThread in 'uThread.pas';
 
 {$R *.res}
 

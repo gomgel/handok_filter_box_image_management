@@ -8,7 +8,8 @@ uses
   InterBaseUniProvider, Grids, AdvObj, BaseGrid, AdvGrid, AdvCGrid,
   StdCtrls, Mask, AdvSmoothEdit, AdvSmoothEditButton, AdvSmoothDatePicker,
   AdvMetroButton, AdvGlowButton, AdvOfficeImage, ExtCtrls, AdvCombo,
-  ColCombo, AdvOfficeStatusBar, AdvOfficeStatusBarStylers, ShellAPi;
+  ColCombo, AdvOfficeStatusBar, AdvOfficeStatusBarStylers, ShellAPi,
+  AdvWiiProgressBar, uThread;
 
 type
   TfrmMain = class(TForm)
@@ -33,6 +34,8 @@ type
     cbxLine: TColumnComboBox;
     asbInfo: TAdvOfficeStatusBar;
     AdvOfficeStatusBarOfficeStyler1: TAdvOfficeStatusBarOfficeStyler;
+    pbProgress: TAdvWiiProgressBar;
+    Label1: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -41,6 +44,8 @@ type
     procedure btnSearchClick(Sender: TObject);
     procedure acgDblClickCell(Sender: TObject; ARow, ACol: Integer);
   private
+    FThreadForAutoDeletion  : TThreadForAutoDeletion;
+
     procedure init;
     procedure final;
   public
@@ -81,8 +86,12 @@ end;
 procedure TfrmMain.init;
 begin
 
+    Panel2.DoubleBuffered := True;
+
     dpFrom.Date := Now;
     dpTo.Date   := Now;
+
+    FThreadForAutoDeletion := TThreadForAutoDeletion.Create(tpNormal, 5*60*1000);
 
 
     if dmMain.checkDBConnected then
@@ -99,6 +108,12 @@ end;
 
 procedure TfrmMain.final;
 begin
+    if Assigned(FThreadForAutoDeletion) then
+    begin
+        FThreadForAutoDeletion.Terminate;
+        FThreadForAutoDeletion.WaitFor;
+        FreeAndNil(FThreadForAutoDeletion);
+    end;
 end;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -126,7 +141,7 @@ begin
 
             Prepare;
 
-            Params.ParamByName('p_action').AsString     := '';
+            Params.ParamByName('p_action').AsString     := 'search';
             Params.ParamByName('p_from_date').AsString := fromDate;
             Params.ParamByName('p_to_date').AsString   := toDate;
             Params.ParamByName('p_line_no').AsString   := line;

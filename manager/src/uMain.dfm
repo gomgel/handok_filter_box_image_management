@@ -1,8 +1,8 @@
 object frmMain: TfrmMain
-  Left = 341
-  Top = 148
-  Width = 1305
-  Height = 671
+  Left = 253
+  Top = 97
+  Width = 1448
+  Height = 875
   Caption = #54596#53552#48149#49828' '#51060#48120#51648' '#44288#47532#51088
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -11,6 +11,7 @@ object frmMain: TfrmMain
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  WindowState = wsMaximized
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -20,7 +21,7 @@ object frmMain: TfrmMain
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1297
+    Width = 1440
     Height = 42
     Align = alTop
     BevelOuter = bvNone
@@ -84,7 +85,7 @@ object frmMain: TfrmMain
       Version = '1.1.1.0'
     end
     object btnClose: TAdvGlowButton
-      Left = 1203
+      Left = 1346
       Top = 0
       Width = 94
       Height = 42
@@ -227,17 +228,17 @@ object frmMain: TfrmMain
   object Panel14: TPanel
     Left = 0
     Top = 42
-    Width = 1297
+    Width = 1440
     Height = 57
     Align = alTop
     BevelOuter = bvNone
     Color = 5066061
     TabOrder = 1
     DesignSize = (
-      1297
+      1440
       57)
     object AdvMetroButton10: TAdvMetroButton
-      Left = 1629
+      Left = 1772
       Top = -542
       Width = 73
       Height = 55
@@ -316,7 +317,7 @@ object frmMain: TfrmMain
       Version = '1.1.0.1'
     end
     object btnSearch: TAdvGlowButton
-      Left = 1148
+      Left = 1291
       Top = 0
       Width = 149
       Height = 57
@@ -908,18 +909,45 @@ object frmMain: TfrmMain
   end
   object Panel2: TPanel
     Left = 0
-    Top = 567
-    Width = 1297
+    Top = 771
+    Width = 1440
     Height = 57
     Align = alBottom
     BevelOuter = bvNone
     Color = 5066061
     TabOrder = 3
     DesignSize = (
-      1297
+      1440
       57)
+    object pbProgress: TAdvWiiProgressBar
+      Left = 0
+      Top = 0
+      Width = 62
+      Height = 57
+      Align = alLeft
+      Appearance.BlockBorderColorActive = clNone
+      Appearance.BlockColor = 15650560
+      Padding = 5
+    end
+    object Label1: TLabel
+      Left = 70
+      Top = 11
+      Width = 203
+      Height = 36
+      AutoSize = False
+      Caption = #51088#46041' '#49325#51228' '#44032#46041' '#51473'....'
+      Color = clWhite
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWhite
+      Font.Height = -21
+      Font.Name = #47569#51008' '#44256#46357
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+      Transparent = True
+    end
     object AdvMetroButton1: TAdvMetroButton
-      Left = 1629
+      Left = 1772
       Top = -542
       Width = 73
       Height = 55
@@ -998,7 +1026,7 @@ object frmMain: TfrmMain
       Version = '1.1.0.1'
     end
     object btnExport: TAdvGlowButton
-      Left = 1139
+      Left = 1282
       Top = 0
       Width = 158
       Height = 57
@@ -1099,8 +1127,8 @@ object frmMain: TfrmMain
   object acg: TAdvColumnGrid
     Left = 0
     Top = 99
-    Width = 1297
-    Height = 468
+    Width = 1440
+    Height = 672
     Cursor = crDefault
     Align = alClient
     ColCount = 14
@@ -1141,10 +1169,7 @@ object frmMain: TfrmMain
       #49324#50896'03'
       #54028#51068#47749
       #54028#51068#50948#52824
-      #46321#47197#51068#49884
-      ''
-      ''
-      '')
+      #46321#47197#51068#49884)
     ControlLook.FixedGradientMirrorFrom = 16447735
     ControlLook.FixedGradientMirrorTo = 16052977
     ControlLook.FixedGradientHoverFrom = 16775139
@@ -2002,8 +2027,8 @@ object frmMain: TfrmMain
   end
   object asbInfo: TAdvOfficeStatusBar
     Left = 0
-    Top = 624
-    Width = 1297
+    Top = 828
+    Width = 1440
     Height = 20
     AnchorHint = False
     AntiAlias = aaNone
@@ -2060,7 +2085,7 @@ object frmMain: TfrmMain
         Progress.Stacked = False
         Text = #54872#44221#49444#51221
         TimeFormat = 'AMPM h:mm:ss'
-        Width = 100
+        Width = 0
       end
       item
         Alignment = taRightJustify

@@ -15,6 +15,7 @@ type
         FDBName                 : String;
         FDBID                   : String;
         FDBPW                   : String;
+        FEffectiveDuration      : String;
 
         FIniFile                : TIniFile;
 
@@ -39,6 +40,7 @@ type
         property DBID                   : String    Index 2     read FDBID                  write SetConfig;
         property DBPW                   : String    Index 3     read FDBPW                  write SetConfig;
         property DBName                 : String    Index 4     read FDBName                write SetConfig;
+        property EffectiveDuration      : String    Index 5     read FEffectiveDuration     write SetConfig;
 
         property ApplicationPath        : String                read FApplicationPath;
     end;
@@ -105,24 +107,26 @@ procedure TConfig.Load();
 begin
     if Not Assigned(FIniFile) then Exit;
 
-    FVersion        := FIniFile.ReadString('COMMON', 'VERSION', '');
+    FVersion            := FIniFile.ReadString('COMMON', 'VERSION', '');
 
-    FDBIP           := FIniFile.ReadString('COMMON', 'DBIP', '');
-    FDBPort         := FIniFile.ReadString('COMMON', 'DBPORT', '');
-    FDBID           := FIniFile.ReadString('COMMON', 'DBID', '');
-    FDBPW           := FIniFile.ReadString('COMMON', 'DBPW', '');
-    FDBName         := FIniFile.ReadString('COMMON', 'DBNAME', '');
-
+    FDBIP               := FIniFile.ReadString('COMMON', 'DBIP', '');
+    FDBPort             := FIniFile.ReadString('COMMON', 'DBPORT', '');
+    FDBID               := FIniFile.ReadString('COMMON', 'DBID', '');
+    FDBPW               := FIniFile.ReadString('COMMON', 'DBPW', '');
+    FDBName             := FIniFile.ReadString('COMMON', 'DBNAME', '');
+    FDBName             := FIniFile.ReadString('COMMON', 'DBNAME', '');
+    FEffectiveDuration  := FIniFile.ReadString('COMMON', 'EFFECTIVEDURATION', '365');
 end;
 
 procedure TConfig.SetConfig(AIndex : Integer; AValue : String);
 begin
     case aIndex of
-        0 : begin FDBIP                         := aValue;  FIniFile.WriteString('COMMON',  'DBIP',         aValue);    end;
-        1 : begin FDBPort                       := aValue;  FIniFile.WriteString('COMMON',  'DBPORT',       aValue);    end;
-        2 : begin FDBID                         := aValue;  FIniFile.WriteString('COMMON',  'DBID',         aValue);    end;
-        3 : begin FDBPW                         := aValue;  FIniFile.WriteString('COMMON',  'DBPW',         aValue);    end;
-        4 : begin FDBName                       := aValue;  FIniFile.WriteString('COMMON',  'DBNAME',       aValue);    end;
+        0 : begin FDBIP                         := aValue;  FIniFile.WriteString('COMMON',  'DBIP',             aValue);    end;
+        1 : begin FDBPort                       := aValue;  FIniFile.WriteString('COMMON',  'DBPORT',           aValue);    end;
+        2 : begin FDBID                         := aValue;  FIniFile.WriteString('COMMON',  'DBID',             aValue);    end;
+        3 : begin FDBPW                         := aValue;  FIniFile.WriteString('COMMON',  'DBPW',             aValue);    end;
+        4 : begin FDBName                       := aValue;  FIniFile.WriteString('COMMON',  'DBNAME',           aValue);    end;
+        5 : begin FEffectiveDuration            := aValue;  FIniFile.WriteString('COMMON',  'EFFECTIVEDURATION',aValue);    end;
     end;
 end;
 
