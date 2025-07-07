@@ -9,7 +9,7 @@ uses
   StdCtrls, Mask, AdvSmoothEdit, AdvSmoothEditButton, AdvSmoothDatePicker,
   AdvMetroButton, AdvGlowButton, AdvOfficeImage, ExtCtrls, AdvCombo,
   ColCombo, AdvOfficeStatusBar, AdvOfficeStatusBarStylers, ShellAPi,
-  AdvWiiProgressBar, uThread;
+  AdvWiiProgressBar, uThread, uType;
 
 type
   TfrmMain = class(TForm)
@@ -48,6 +48,9 @@ type
 
     procedure init;
     procedure final;
+
+    procedure onStepInfoForAutoDeletion(step : Integer);
+
   public
     procedure get(fromDate, toDate, line : String);
     procedure getLine;
@@ -91,7 +94,7 @@ begin
     dpFrom.Date := Now;
     dpTo.Date   := Now;
 
-    FThreadForAutoDeletion := TThreadForAutoDeletion.Create(tpNormal, 5*60*1000);
+    FThreadForAutoDeletion := TThreadForAutoDeletion.Create(tpNormal, 1 * 10, onStepInfoForAutoDeletion);
 
 
     if dmMain.checkDBConnected then
@@ -122,6 +125,43 @@ end;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+procedure TfrmMain.onStepInfoForAutoDeletion(step : Integer);
+begin
+    case step of
+        9, 0 : //대기중...
+        begin
+            pbProgress.Appearance.BlockColor := clSilver;
+            Label1.Caption := '자동삭제 대기중...';
+        end;
+        1 : //자동 삭제 진행중
+        begin
+            pbProgress.Appearance.BlockColor := $00EECF00;
+            Label1.Caption := '자동삭제 진행중...';
+        end;
+        -1 : //자동 삭제 실패
+        begin
+            pbProgress.Appearance.BlockColor := clRed;
+            Label1.Caption := '자동삭제 실패...';
+        end;
+        -2 : //자동 삭제 실패, DB 연결 실패
+        begin
+            pbProgress.Appearance.BlockColor := clRed;
+            Label1.Caption := 'DB 연결 실패...';
+        end;
+        -9 : //자동 삭제 실패, 알수 없는 에러
+        begin
+            pbProgress.Appearance.BlockColor := clRed;
+            Label1.Caption := '알 수 없는 에러...';
+        end;
+    end;
+end;
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+///////////////////////////////////////////////////////////////////////////////
 
 procedure TfrmMain.get(fromDate, toDate, line : String);
 var
@@ -263,5 +303,8 @@ begin
 
     ShellExecute(Application.handle, 'open', PChar(acg.Cells[ACol, ARow]), '', Nil, sw_show);
 end;
+
+//$00EECF00
+//
 
 end.

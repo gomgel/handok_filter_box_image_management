@@ -6,7 +6,8 @@ uses
   uConfig in 'uConfig.pas',
   uDM in 'uDM.pas' {dmMain: TDataModule},
   uConst in 'uConst.pas',
-  uThread in 'uThread.pas';
+  uThread in 'uThread.pas',
+  uType in 'uType.pas';
 
 {$R *.res}
 

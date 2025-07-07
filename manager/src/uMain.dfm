@@ -926,7 +926,7 @@ object frmMain: TfrmMain
       Height = 57
       Align = alLeft
       Appearance.BlockBorderColorActive = clNone
-      Appearance.BlockColor = 15650560
+      Appearance.BlockColor = clSilver
       Padding = 5
     end
     object Label1: TLabel

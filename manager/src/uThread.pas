@@ -4,7 +4,7 @@ interface
 
 uses
     Windows, SysUtils, Classes, DB, DBAccess, Uni, UniProvider, SQLServerUniProvider, ActiveX, Forms,
-    uConfig, DateUtils;
+    uConfig, DateUtils, uType;
 
 type
     TThreadForAutoDeletion = class(TThread)
@@ -19,14 +19,21 @@ type
 
         FInterval           : Integer;
 
+        FStepEvent          : TNotifyStepEvent;
+
         function ConnectDB : Boolean;
 
         procedure Execute; override;
 
-        procedure doTaskForDeletion(date : String);
+        function get(date : String) : Integer;
+        function remove(list : TStringList) : Boolean;
+
+        function removeFileOnLocal(path : String) : Boolean;
+        function removeFileOnDB(uuid : String) : Boolean;
+
 
     public
-        constructor Create(APrioriy : TThreadPriority; AInterval : Integer);
+        constructor Create(APrioriy : TThreadPriority; AInterval : Integer; AStepEvent : TNotifyStepEvent);
 
         destructor Destroy; override;
 
@@ -38,13 +45,16 @@ type
 
 implementation
 
-constructor TThreadForAutoDeletion.Create(APrioriy : TThreadPriority; AInterval : Integer);
+constructor TThreadForAutoDeletion.Create(APrioriy : TThreadPriority; AInterval : Integer; AStepEvent : TNotifyStepEvent);
 var
     strServer : String;
 begin
     Inherited Create(True);
     FreeOnTerminate     := False;
     Priority            := APrioriy;
+
+    FStepEvent          := AStepEvent;
+
 
     FInterval           := AInterval * 1000;
 
@@ -76,6 +86,8 @@ end;
 //
 //
 ////////////////////////////////////////////////////////////////////////////////
+
+
 
 function TThreadForAutoDeletion.ConnectDB : Boolean;
 begin
@@ -130,14 +142,104 @@ end;
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-procedure TThreadForAutoDeletion.doTaskForDeletion(date : String);
+function TThreadForAutoDeletion.removeFileOnLocal(path : String) : Boolean;
+begin
+    if FileExists(path) then
+    begin
+        if DeleteFile(path) then
+        begin
+            OutputDebugString(PChar('Deletion Success... : ' + path ));
+        end
+        else
+        begin
+            OutputDebugString(PChar('Deletion failed... : ' + path ));
+        end;
+    end
+    else
+    begin
+        OutputDebugString(PChar('This file is not found : ' + path ));
+    end;
+end;
+
+function TThreadForAutoDeletion.removeFileOnDB(uuid : String) : Boolean;
+begin
+    Result := False;
+
+    if Not FUniConnection.Connected then Exit;
+
+    with FUniStoredProc do
+    begin
+        Close;
+        StoredProcName := '';
+        StoredProcName := UpperCase('pda_set_screenshot');
+        Params.Clear;
+
+        Prepare;
+
+        Params.ParamByName('p_action').AsString     := 'delete';
+        Params.ParamByName('p_image_uuid').AsString  := uuid;
+
+        Execute;
+
+        OutputDebugString(PChar('Try to remove a file Info : ' + Params.ParamByName('p_result_code').AsString + ' - ' + Params.ParamByName('p_result_msg').AsString));
+
+        result := True;
+    end;
+
+end;
+
+function TThreadForAutoDeletion.remove(list : TStringList) : Boolean;
+var
+    ni : Integer;
+    uuid, path : String;
+begin
+    if list.Count = 0 then
+    begin
+        Result := True;
+        Exit;
+    end;
+
+    for ni := 0 to list.Count - 1 do
+    begin
+        if Terminated then Break;
+
+        uuid := list.Names[ni];
+        path := list.ValueFromIndex[ni];
+
+        if removeFileOnDB(uuid) then
+        begin
+            removeFileOnLocal(path);
+        end
+        else
+        begin
+            Result := False;
+            Exit;
+        end;
+
+        OutputDebugString(PChar( uuid + ' - ' + path));
+    end;
+    Result := True;
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+////////////////////////////////////////////////////////////////////////////////
+
+function TThreadForAutoDeletion.get(date : String) : Integer;
 var
     index   : Integer;
     strTemp : String;
+    list    : TStringList;
 begin
     try
 
-        if Not ConnectDB then Exit;
+        if Not ConnectDB then
+        begin
+            Result := -2;
+            Exit;
+        end;
 
         with FUniStoredProc do
         begin
@@ -153,19 +255,41 @@ begin
 
             Execute;
 
-            if recordCount = 0 then Exit;
+            if recordCount = 0 then
+            begin
+                Result := 0;
+                Exit;
+            end;
 
             try
+
+                list := TStringList.Create;
+
                 while Not Eof do
                 begin
+                    OutputDebugString(PChar('file name that need to remove : ' + FieldByName('file_name').AsString));
+
+                    list.Add(FieldByName('image_uuid').AsString +'='+ FieldByName('file_path').AsString);
 
                     Next;
                 end;
+
+                if list.Count > 0 then
+                begin
+                    if Not remove(list) then
+                    begin
+                        Result := -1;
+                        Exit;
+                    end;
+                end;
             finally
+                if Assigned(list) then FreeAndNil(list);
             end;
         end;
 
     except
+
+        Result := -9;
 
         try
             FUniConnection.Ping;
@@ -184,8 +308,9 @@ end;
 
 procedure TThreadForAutoDeletion.Execute;
 var
-    ni : Integer;
+    ni, nj : Integer;
     date : String;
+    res : Integer;
 begin
     try
         ni := FInterval + 1;
@@ -195,10 +320,21 @@ begin
             begin
                 ni := 0;
 
+                if Assigned(FStepEvent) then FStepEvent(1);
+
+                nj := 0;
+                while 1=1 do
+                begin
+                    if nj > 2000 then Break;
+                    Sleep(10); Application.ProcessMessages;
+                    inc(nj, 10);
+                end;
+
                 date := FormatDateTime('YYYYMMDD', IncDay(Now, StrToIntDef('-' + TConfig.GetObject.EffectiveDuration, -365)));
                 OutputDebugString(PChar('remove date : ' + date));
 
-                doTaskForDeletion(date);
+                res := get(date);
+                if Assigned(FStepEvent) then FStepEvent(res);
             end;
             
             Sleep(10); Application.ProcessMessages;
