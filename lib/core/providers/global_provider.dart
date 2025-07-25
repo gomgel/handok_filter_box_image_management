@@ -17,7 +17,7 @@ final activeTime = StateProvider<DateTime>((ref) => DateTime.now());
 final sharedPreferenceProvider = Provider((ref) => SharedPreferences.getInstance());
 
 final loginUserProvider = StateProvider<List<SearchModel>>((ref) => []);
-final loginLineProvider = StateProvider<SearchModel>((ref) => SearchModel.withEmpty());
+final loginLineProvider = StateProvider<List<SearchModel>>((ref) => []);
 
 
 final configProvider = StateNotifierProvider<ConfigNotifier, ConfigModel>((ref) {

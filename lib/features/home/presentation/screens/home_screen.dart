@@ -106,8 +106,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               const SizedBox(height: 16.0),
               const SizedBox(height: 4.0),
-              SearchDropDown(
+              SearchMultiDropDown(
                 label: "부서정보",
+                maxSelectableCount: 2,
                 items: (String filter, LoadProps? loadProps) async {
                   //debugPrint("filter : $filter,  str : $s");
 
@@ -121,9 +122,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                   return list;
                 },
-                onSelectedItem: (model) {
-                  debugPrint("Selected Changed : ${model.toString()}");
-                  ref.read(loginLineProvider.notifier).state = model;
+                onSelectedItem: (models) {
+                  debugPrint("Selected Changed : ${models.toString()}");
+                  ref.read(loginLineProvider.notifier).state = models;
                 },
               ),
               const SizedBox(height: 32.0),
@@ -144,7 +145,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       return;
                     }
 
-                    if (ref.read(loginLineProvider).isEmpty()) {
+                    if (ref.read(loginLineProvider).isEmpty) {
 
                       ScaffoldMessenger.of(context)
                           .showSnackBar(CommonUtils.instance.alertSnackBar(context: context, type: SnackBarType.error, message: "부서정보는 필수값!"));

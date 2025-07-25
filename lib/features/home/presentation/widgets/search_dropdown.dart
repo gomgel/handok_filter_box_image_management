@@ -84,7 +84,7 @@ class _SearchEmployeeState extends State<SearchDropDown> {
         searchDelay: const Duration(seconds: 10),
         bottomSheetProps:
             BottomSheetProps(backgroundColor: Colors.blueGrey[50], shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0))),
-        showSearchBox: true,
+        //showSearchBox: true,
         itemBuilder: (context, item, isDisabled, isSelected) {
           return ListTile(
             title: Text(

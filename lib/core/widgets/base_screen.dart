@@ -18,9 +18,14 @@ class BaseScreen extends ConsumerWidget {
     final line = ref.watch(loginLineProvider);
 
     var names = "";
+    var lines = "";
 
     for(var item in user) {
       names = "$names ${item.name}";
+    }
+
+    for(var item in line) {
+      lines = "$lines ${item.name}";
     }
 
     return Scaffold(
@@ -41,19 +46,21 @@ class BaseScreen extends ConsumerWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(width: 32.0),
+                  const SizedBox(width: 16.0),
                   Column(
                     children: [
+                      // Text(
+                      //   lines,
+                      //   overflow: TextOverflow.fade,
+                      //   style: TextStyle(
+                      //     color: Theme.of(context).colorScheme.primary,
+                      //     fontSize: 12.0,
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
+                      //
+                      // ),
                       Text(
-                        "${line.name}",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        "${names}",
+                        names,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.primary,
                           fontSize: 12.0,
