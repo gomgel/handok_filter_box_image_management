@@ -268,7 +268,7 @@ const upload = multer({ storage: storage });
     console.log(result.output.p_result_msg);
 
     if (err) {
-      console.log('saveScreenshotInfo: '  + err);
+      console.log('err: '  + err);
       res.status(200).json({ 
         message: 'Inserting into db is failed!', 
         imageUrl: imageUrl,
@@ -276,12 +276,21 @@ const upload = multer({ storage: storage });
         resultMessage: result.output.p_result_msg 
       });                 
     } else {      
-      res.status(200).json({ 
+      if (result.output.p_result_code == '1') {
+        res.status(200).json({ 
         message: 'Screenshot uploaded successfully!', 
         imageUrl: imageUrl,
         resultCode: result.output.p_result_code, 
         resultMessage: result.output.p_result_msg 
-      });   
+        });  
+      } else {
+        res.status(598).json({ 
+          message: 'Inserting into db is Failed!', 
+          imageUrl: imageUrl,
+          resultCode: result.output.p_result_code, 
+          resultMessage: result.output.p_result_msg 
+          }); 
+      } 
       //res.status(200).json({ message: 'Screenshot uploaded successfully!', imageUrl: imageUrl });
     }
   } );  

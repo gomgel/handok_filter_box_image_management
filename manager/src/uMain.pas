@@ -94,7 +94,7 @@ begin
     dpFrom.Date := Now;
     dpTo.Date   := Now;
 
-    FThreadForAutoDeletion := TThreadForAutoDeletion.Create(tpNormal, 1 * 10, onStepInfoForAutoDeletion);
+    FThreadForAutoDeletion := TThreadForAutoDeletion.Create(tpNormal, 5 * 60, onStepInfoForAutoDeletion);
 
 
     if dmMain.checkDBConnected then
