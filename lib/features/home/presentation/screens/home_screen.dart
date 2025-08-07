@@ -212,6 +212,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   }
 
+  Future<int> getCountInfo() async {
+    debugPrint("start...");
+    final info = await ref.watch(commonRepositoryProvider).getCount(from: '20250807', to: '20250807', line: 'A1000');
+    debugPrint("end...");
+    debugPrint("count : ${info.return_data}  ");
+
+    try {
+
+
+      return info.return_data;
+    } catch (e) {
+      return 0;
+    }
+
+  }
+
   Widget _buildModernTextFormField({
     required TextEditingController controller,
     required String labelText,

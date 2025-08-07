@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'dart:typed_data';
 
+import 'package:filter_box_image_management/features/image_capture/data/provider/main_provider.dart';
 import 'package:intl/intl.dart'; // For formatting dates
 
 import 'package:filter_box_image_management/core/providers/global_provider.dart';
@@ -15,9 +16,8 @@ import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'dart:convert';
 
-import '../../../../core/models/search_model.dart';
+import '../../../../core/providers/common_provider.dart';
 import '../../../../core/widgets/base_screen.dart';
 
 class MainScreen extends StatelessWidget {
@@ -53,7 +53,7 @@ class _UploadCameraPhotoScreenState extends ConsumerState<UploadCameraPhotoScree
   bool _isUploading = false;
   double _uploadProgress = 0.0;
 
-  final List<bool> _selectedLine = <bool>[true, false];
+  //final List<bool> _selectedLine = <bool>[true, false];
 
   // _displayImageBytes holds the bytes for display
   Uint8List? _displayImageBytes;
@@ -186,7 +186,7 @@ class _UploadCameraPhotoScreenState extends ConsumerState<UploadCameraPhotoScree
       final request = http.MultipartRequest('POST', url);
 
       int _index = 0;
-      for (var isSelected in _selectedLine.indexed) {
+      for (var isSelected in ref.read(selectedLinesProvider).indexed) {
         if (isSelected.$2) {
           _index = isSelected.$1;
         }
@@ -274,24 +274,47 @@ class _UploadCameraPhotoScreenState extends ConsumerState<UploadCameraPhotoScree
     }
   }
 
+  getNowCount(String line) async {
+    try {
+      final date = DateFormat('yyyyMMdd', 'en_US').format(DateTime.now().toLocal());
+
+      final info = await ref.watch(commonRepositoryProvider).getCount(from: date, to: date, line: line);
+
+      ref.read(nowCountProvider.notifier).state = info.return_data;
+
+      debugPrint("count : ${info.return_data}");
+    } catch (e) {
+      ref.read(nowCountProvider.notifier).state = 0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    final selectedLines = ref.watch(selectedLinesProvider);
+
+    for (var isSelected in ref.read(selectedLinesProvider).indexed) {
+      if (isSelected.$2) {
+        getNowCount(ref.read(loginLineProvider)[isSelected.$1].code);
+        break;
+      }
+    }
+
     return Column(
       children: [
         ToggleButtons(
           direction: Axis.horizontal,
           onPressed: (int index) {
-            setState(
-              () {
-                //1개 이상의 라인은 무조건 선택 되어서 넘어옴.
-                //1개 일 때는 그냥 첫번째꺼만 True 유지..
-                if (ref.read(loginLineProvider).length != 1) {
-                  for (int i = 0; i < _selectedLine.length; i++) {
-                    _selectedLine[i] = i == index;
-                  }
-                }
-              },
-            );
+            //1개 이상의 라인은 무조건 선택 되어서 넘어옴.
+            //1개 일 때는 그냥 첫번째꺼만 True 유지..
+
+            if (ref.read(loginLineProvider).length != 1) {
+              final list = List<bool>.from(ref.read(selectedLinesProvider));
+              for (int i = 0; i < list.length; i++) {
+                list[i] = i == index;
+              }
+              ref.read(selectedLinesProvider.notifier).state = list;
+            }
           },
           borderRadius: const BorderRadius.all(Radius.circular(8)),
           selectedBorderColor: Colors.lightBlueAccent[700],
@@ -299,7 +322,7 @@ class _UploadCameraPhotoScreenState extends ConsumerState<UploadCameraPhotoScree
           fillColor: Colors.lightBlueAccent[200],
           color: Colors.lightBlueAccent[400],
           constraints: const BoxConstraints(minHeight: 40.0, minWidth: 160.0, maxWidth: 160.0),
-          isSelected: _selectedLine,
+          isSelected: selectedLines,
           textStyle: const TextStyle(fontSize: 13.0),
           children: [
             Padding(
@@ -308,7 +331,7 @@ class _UploadCameraPhotoScreenState extends ConsumerState<UploadCameraPhotoScree
                 ref.read(loginLineProvider)[0].name,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
-                  // style: TextStyle(fontSize: 14.0)
+                // style: TextStyle(fontSize: 14.0)
               ),
             ),
             Padding(
@@ -318,12 +341,13 @@ class _UploadCameraPhotoScreenState extends ConsumerState<UploadCameraPhotoScree
                       ref.read(loginLineProvider)[1].name,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
-                  // style: TextStyle(fontSize: 14.0)
+                      // style: TextStyle(fontSize: 14.0)
                     )
                   : Text(""),
             ),
           ],
         ),
+        _CountWidget(),
         Expanded(
           child: Center(
             child: Column(
@@ -375,6 +399,24 @@ class _UploadCameraPhotoScreenState extends ConsumerState<UploadCameraPhotoScree
           ),
         ),
       ],
+    );
+  }
+}
+
+class _CountWidget extends ConsumerWidget {
+  const _CountWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+
+    final count = ref.watch(nowCountProvider);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18.0),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Align(alignment : Alignment.centerRight, child: Text('수량 : $count')),
+      ),
     );
   }
 }
