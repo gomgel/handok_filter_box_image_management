@@ -65,22 +65,22 @@ router.get('/emp', async function(req, res, next) {
       } else {
 
       
-      console.log(result.output.p_result_code);
-      console.log(result.output.p_result_msg);
+        console.log(result.output.p_result_code);
+        console.log(result.output.p_result_msg);
 
-      let returnData = { 
-        return_code : result.output.p_result_code, 
-        return_msg : result.output.p_result_msg, 
-        return_data : result.recordset }
+        let returnData = { 
+          return_code : result.output.p_result_code, 
+          return_msg : result.output.p_result_msg, 
+          return_data : result.recordset }
 
-      //console.log(result.recordset);
+        //console.log(result.recordset);
 
-		  res.writeHead('200', {'Content-Type': 'application/json; charset=utf8'});
+        res.writeHead('200', {'Content-Type': 'application/json; charset=utf8'});
 
-		  res.write(JSON.stringify(returnData));
-		  
-		  res.end();	
-    }
+        res.write(JSON.stringify(returnData));
+        
+        res.end();	
+      }
   } );  
 });
 
@@ -134,6 +134,64 @@ router.get('/line', async function(req, res, next) {
 		  
 		  res.end();	
     }
+  } );  
+
+});
+
+/* get Production Count infomation */
+//http://localhost:3000/pda/info/count?from=20250807&to=20250807&line=A1000
+router.get('/info/count', async function(req, res, next) {
+
+  console.log('[' + (new Date) + '] => ' +  'query string => ' + req.query.from + ' - ' + req.query.to + ' - ' + req.query.line);
+
+  var connection = await pool;
+
+  const request = await connection.request()
+  .input('p_action', dirver.NVarChar(50), 'count_01')
+  .input('p_from_date', dirver.NVarChar(8), req.query.from)
+  .input('p_to_date', dirver.NVarChar(8), req.query.to)
+  .input('p_line_no', dirver.NVarChar(10), req.query.line)
+  .output('p_result_code', dirver.NVarChar(5))
+  .output('p_result_msg', dirver.NVarChar(100))
+  .execute('[pda_get_screenshot]', (err, result) => {
+
+      if (err) {
+        console.log('error found : '  + err);
+
+        let returnData = { 
+          return_code : '-1', 
+          return_msg : err.originalError.info.message, 
+          return_data : []}      
+        
+
+          res.writeHead('200', {'Content-Type': 'application/json; charset=utf8'});
+          res.write(JSON.stringify(returnData));		
+          res.end();	          
+      } else {
+
+        let returnCount = 0;
+
+        if ( result.recordset.length == 0 ) {
+          returnCount = 0;
+        } else {
+          returnCount = result.recordset[0].count;
+        }
+
+        console.log(result);
+
+        let returnData = { 
+          return_code : result.output.p_result_code, 
+          return_msg : result.output.p_result_msg, 
+          return_data : returnCount }
+
+        //console.log(result.recordset);
+
+        res.writeHead('200', {'Content-Type': 'application/json; charset=utf8'});
+
+        res.write(JSON.stringify(returnData));
+        
+        res.end();	
+      }
   } );  
 
 });
@@ -255,8 +313,8 @@ const upload = multer({ storage: storage });
   .input('p_image_uuid', dirver.NVarChar(30), req.file.filename.substring(6, 29))
   .input('p_image_date', dirver.NVarChar(8), dateFormat(new Date()).substring(0,8) )
   .input('p_line_no', dirver.NVarChar(10), req.body.line_code)
-  .input('p_file_name', dirver.NVarChar(50), req.file.filename)
-  .input('p_file_path', dirver.NVarChar(200), path.join(__dirname, '..', '\\images\\') + req.file.filename)
+  .input('p_file_name', dirver.NVarChar(100), req.file.filename)
+  .input('p_file_path', dirver.NVarChar(500), path.join(__dirname, '..', '\\images\\') + req.file.filename)
   .input('p_emp1', dirver.NVarChar(20), req.body.emp_0001)
   .input('p_emp2', dirver.NVarChar(20), req.body.emp_0002)
   .input('p_emp3', dirver.NVarChar(20), req.body.emp_0003)
@@ -264,8 +322,8 @@ const upload = multer({ storage: storage });
   .output('p_result_msg', dirver.NVarChar(300))
   .execute('pda_set_screenshot', (err, result) => {
 
-    console.log(result.output.p_result_code);
-    console.log(result.output.p_result_msg);
+    //console.log(result.output.p_result_code);
+    //console.log(result.output.p_result_msg);
 
     if (err) {
       console.log('err: '  + err);
