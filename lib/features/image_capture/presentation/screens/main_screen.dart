@@ -186,7 +186,7 @@ class _UploadCameraPhotoScreenState extends ConsumerState<UploadCameraPhotoScree
       final request = http.MultipartRequest('POST', url);
 
       int _index = 0;
-      for(var isSelected in _selectedLine.indexed) {
+      for (var isSelected in _selectedLine.indexed) {
         if (isSelected.$2) {
           _index = isSelected.$1;
         }
@@ -298,19 +298,30 @@ class _UploadCameraPhotoScreenState extends ConsumerState<UploadCameraPhotoScree
           selectedColor: Colors.white,
           fillColor: Colors.lightBlueAccent[200],
           color: Colors.lightBlueAccent[400],
-          constraints: const BoxConstraints(minHeight: 40.0, minWidth: 160.0),
+          constraints: const BoxConstraints(minHeight: 40.0, minWidth: 160.0, maxWidth: 160.0),
           isSelected: _selectedLine,
+          textStyle: const TextStyle(fontSize: 13.0),
           children: [
-            Text(
-              ref.read(loginLineProvider)[0].name,
-              overflow: TextOverflow.fade,
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Text(
+                ref.read(loginLineProvider)[0].name,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                  // style: TextStyle(fontSize: 14.0)
+              ),
             ),
-            ref.read(loginLineProvider).length != 1
-                ? Text(
-                    ref.read(loginLineProvider)[1].name,
-                    overflow: TextOverflow.fade,
-                  )
-                : Text(""),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: ref.read(loginLineProvider).length != 1
+                  ? Text(
+                      ref.read(loginLineProvider)[1].name,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                  // style: TextStyle(fontSize: 14.0)
+                    )
+                  : Text(""),
+            ),
           ],
         ),
         Expanded(
