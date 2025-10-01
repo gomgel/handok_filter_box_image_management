@@ -16,6 +16,7 @@ class BaseScreen extends ConsumerWidget {
     final config = ref.watch(configProvider);
     final user = ref.watch(loginUserProvider);
     final line = ref.watch(loginLineProvider);
+    final version = ref.watch(versionProvider);
 
     var names = "";
     var lines = "";
@@ -73,7 +74,7 @@ class BaseScreen extends ConsumerWidget {
                 ],
               ),
               Text(
-                'v1.0.0',
+                'v${version.value}',
                 style: TextStyle(
                   fontSize: 12.0,
                   fontWeight: FontWeight.bold,

@@ -94,7 +94,7 @@ class _UploadCameraPhotoScreenState extends ConsumerState<UploadCameraPhotoScree
         // Get current date
         final now = DateTime.now();
         // Format the date based on current locale and time zone (Seoul, South Korea)
-        final formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss', 'en_US').format(now.toLocal());
+        final formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss', 'en-US').format(now.toLocal());
 
         final textPainter = TextPainter(
           text: TextSpan(
