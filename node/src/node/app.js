@@ -33,8 +33,6 @@ app.use('/setup', express.static('setup'));
 
 var lastExectime = new Date();
 
-// console.log(__dirname + '\\images')
-
 
 // ( async function() {
 

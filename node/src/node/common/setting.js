@@ -1,4 +1,4 @@
 module.exports = {
-    version : "1.0.0",
-    number : "1" 
+    version : "1.0.1",
+    number : "2" 
 }

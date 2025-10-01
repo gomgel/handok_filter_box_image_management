@@ -7,20 +7,15 @@ var multer = require('multer');
 var path = require('path');
 var env = require('../common/setting');
 
-function dateFormat(date) {
-  let month = date.getMonth() + 1;
-  let day = date.getDate();
-  let hour = date.getHours();
-  let minute = date.getMinutes();
-  let second = date.getSeconds();
+function dateFormat(now) {
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
 
-  month = month >= 10 ? month : '0' + month;
-  day = day >= 10 ? day : '0' + day;
-  hour = hour >= 10 ? hour : '0' + hour;
-  minute = minute >= 10 ? minute : '0' + minute;
-  second = second >= 10 ? second : '0' + second;
-
-  return date.getFullYear() + month + day + hour + minute + second;
+  return `${year}${month}${day}${hours}${minutes}${seconds}`;
 }
 
 router.get('/', function(req, res, next) {
